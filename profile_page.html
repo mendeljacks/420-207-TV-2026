@@ -1,11 +1,486 @@
-<h1>Hello world!!!!</h1>
-<h3>Name: Mona Lisa</h3>
-<img
-  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkqdJHLzlhi759E1P909BGNFyO8ple9LOOC9FQ6XwXQg&s"
-  alt="Profile Image"
-/>
-<li>age: very old</li>
-<p>
-  The Mona Lisa is a famous oil portrait painted by the Italian artist Leonardo
-  da Vinci between 1503 and 1519
-</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mona Lisa — Profile</title>
+<meta name="description" content="A profile page for Leonardo da Vinci's Mona Lisa — the most famous portrait in the world, at home in the Musée du Louvre, Paris." />
+<meta name="color-scheme" content="dark" />
+<style>
+  :root {
+    color-scheme: dark;
+    --ink: #0f0d0b;
+    --panel: #1a1511;
+    --panel-2: #221b15;
+    --line: rgba(212, 175, 55, 0.22);
+    --gold: #d4af37;
+    --gold-soft: #c8a951;
+    --text: #ece5da;
+    --muted: #a99f92;
+    --radius: 18px;
+    --shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.9);
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --serif: Georgia, "Iowan Old Style", "Times New Roman", serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: clamp(18px, 4vw, 56px) clamp(14px, 3vw, 32px);
+    font: 16px/1.65 var(--sans);
+    color: var(--text);
+    background: var(--ink);
+    background-image:
+      radial-gradient(1100px 620px at 12% -8%, rgba(212, 175, 55, 0.14), transparent 62%),
+      radial-gradient(900px 560px at 108% 108%, rgba(96, 126, 156, 0.14), transparent 60%);
+    background-attachment: fixed;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 940px;
+    margin: 0 auto;
+    background: linear-gradient(180deg, var(--panel), var(--panel-2));
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+  }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  /* ---------- header ---------- */
+  .profile {
+    display: grid;
+    grid-template-columns: 232px 1fr;
+    gap: clamp(20px, 3.5vw, 40px);
+    padding: clamp(24px, 4vw, 44px);
+    border-bottom: 1px solid var(--line);
+    background:
+      linear-gradient(180deg, rgba(212, 175, 55, 0.06), transparent 70%);
+  }
+
+  .portrait {
+    margin: 0;
+    align-self: start;
+  }
+
+  .portrait img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    border: 1px solid rgba(212, 175, 55, 0.45);
+    padding: 6px;
+    background: rgba(0, 0, 0, 0.35);
+    box-shadow: 0 18px 38px -18px rgba(0, 0, 0, 0.95);
+    transition: transform 0.5s ease, box-shadow 0.5s ease;
+  }
+
+  .portrait img:hover {
+    transform: translateY(-4px) scale(1.015);
+    box-shadow: 0 26px 52px -20px rgba(212, 175, 55, 0.4);
+  }
+
+  .portrait figcaption {
+    margin-top: 12px;
+    font-size: 0.76rem;
+    line-height: 1.5;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  h1 {
+    margin: 0 0 4px;
+    font: 400 clamp(2.1rem, 5vw, 3rem)/1.1 var(--serif);
+    letter-spacing: 0.01em;
+  }
+
+  .aka {
+    margin: 0 0 18px;
+    font: italic 1.02rem/1.4 var(--serif);
+    color: var(--gold-soft);
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 20px;
+    padding: 0;
+    list-style: none;
+  }
+
+  .chips li {
+    font-size: 0.75rem;
+    letter-spacing: 0.055em;
+    text-transform: uppercase;
+    color: var(--gold-soft);
+    border: 1px solid var(--line);
+    background: rgba(212, 175, 55, 0.07);
+    border-radius: 999px;
+    padding: 5px 12px;
+  }
+
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #63b37a;
+    box-shadow: 0 0 0 4px rgba(99, 179, 122, 0.18);
+  }
+
+  /* ---------- stats ---------- */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    border-bottom: 1px solid var(--line);
+  }
+
+  .stat {
+    padding: 20px clamp(16px, 2.5vw, 28px);
+    border-right: 1px solid var(--line);
+  }
+
+  .stat:last-child { border-right: 0; }
+
+  .stat dt {
+    font-size: 0.7rem;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .stat dd {
+    margin: 6px 0 0;
+    font: 400 1.32rem/1.25 var(--serif);
+    color: var(--text);
+  }
+
+  .stat small {
+    display: block;
+    margin-top: 3px;
+    font: 400 0.78rem/1.4 var(--sans);
+    color: var(--muted);
+  }
+
+  /* ---------- sections ---------- */
+  section { padding: clamp(26px, 4vw, 44px); border-bottom: 1px solid var(--line); }
+
+  h2 {
+    margin: 0 0 20px;
+    font: 400 1.42rem/1.2 var(--serif);
+    color: var(--text);
+  }
+
+  h2::after {
+    content: "";
+    display: block;
+    width: 46px;
+    height: 2px;
+    margin-top: 10px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+  }
+
+  p { margin: 0 0 1em; }
+  p:last-child { margin-bottom: 0; }
+
+  blockquote {
+    margin: 22px 0 0;
+    padding: 16px 22px;
+    border-left: 3px solid var(--gold);
+    background: rgba(212, 175, 55, 0.06);
+    border-radius: 0 10px 10px 0;
+    font: italic 1.1rem/1.55 var(--serif);
+    color: #f4eee4;
+  }
+
+  blockquote cite {
+    display: block;
+    margin-top: 8px;
+    font: 400 0.8rem/1.4 var(--sans);
+    font-style: normal;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* fact file */
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(228px, 1fr));
+    gap: 14px 26px;
+    margin: 0;
+  }
+
+  .facts div {
+    padding-bottom: 12px;
+    border-bottom: 1px dashed rgba(212, 175, 55, 0.16);
+  }
+
+  .facts dt {
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold-soft);
+  }
+
+  .facts dd { margin: 4px 0 0; color: var(--text); }
+
+  /* timeline */
+  .timeline {
+    margin: 0;
+    padding: 0 0 0 26px;
+    list-style: none;
+    border-left: 1px solid var(--line);
+  }
+
+  .timeline li { position: relative; padding: 0 0 20px 6px; }
+  .timeline li:last-child { padding-bottom: 0; }
+
+  .timeline li::before {
+    content: "";
+    position: absolute;
+    left: -32px;
+    top: 8px;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.16);
+  }
+
+  .timeline b {
+    display: inline-block;
+    min-width: 66px;
+    font: 400 1rem/1.4 var(--serif);
+    color: var(--gold-soft);
+  }
+
+  /* trivia */
+  .trivia {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    columns: 2;
+    column-gap: 34px;
+  }
+
+  .trivia li {
+    break-inside: avoid;
+    margin-bottom: 12px;
+    padding-left: 20px;
+    position: relative;
+    color: #ded6c9;
+  }
+
+  .trivia li::before {
+    content: "✦";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--gold);
+    font-size: 0.8rem;
+  }
+
+  .note {
+    background: rgba(96, 126, 156, 0.1);
+    border: 1px solid rgba(96, 126, 156, 0.3);
+    border-radius: 12px;
+    padding: 18px 22px;
+  }
+
+  .note strong { color: #cfe1f2; }
+
+  /* ---------- footer ---------- */
+  footer {
+    padding: 22px clamp(26px, 4vw, 44px) 28px;
+    font-size: 0.8rem;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  footer a { color: var(--gold-soft); }
+  footer code { font-size: 0.78rem; color: var(--gold-soft); }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 720px) {
+    .profile { grid-template-columns: 1fr; }
+    .portrait { max-width: 232px; margin: 0 auto; }
+    .profile .identity { text-align: center; }
+    .chips, .status { justify-content: center; }
+    .trivia { columns: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .wrap { animation: none; }
+    .portrait img { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<main class="wrap">
+
+  <header class="profile">
+    <figure class="portrait">
+      <img
+        src="assets/mona-lisa.jpg"
+        width="640"
+        height="954"
+        alt="Mona Lisa by Leonardo da Vinci: a woman with a faint, enigmatic smile, seated against a hazy blue-green landscape."
+        decoding="async"
+      />
+      <figcaption>Oil on poplar · 77 × 53 cm · Musée du Louvre, Paris</figcaption>
+    </figure>
+
+    <div class="identity">
+      <h1>Mona Lisa</h1>
+      <p class="aka">a.k.a. <em>La Gioconda</em> · <em>La Joconde</em> · the lady with the smile</p>
+
+      <ul class="chips">
+        <li>Renaissance</li>
+        <li>Oil on poplar</li>
+        <li>Sfumato</li>
+        <li>Most famous portrait</li>
+      </ul>
+
+      <p class="status"><span class="dot" aria-hidden="true"></span> On view — Salle des États, Louvre</p>
+    </div>
+  </header>
+
+  <dl class="stats">
+    <div class="stat">
+      <dt>Age</dt>
+      <dd>523</dd>
+      <small>very old — begun c. 1503</small>
+    </div>
+    <div class="stat">
+      <dt>Height</dt>
+      <dd>77 cm</dd>
+      <small>30 in, head to hand</small>
+    </div>
+    <div class="stat">
+      <dt>Width</dt>
+      <dd>53 cm</dd>
+      <small>21 in, single panel</small>
+    </div>
+    <div class="stat">
+      <dt>Home</dt>
+      <dd>Paris</dd>
+      <small>1st arrondissement</small>
+    </div>
+  </dl>
+
+  <section aria-labelledby="about">
+    <h2 id="about">About</h2>
+    <p>
+      Painted by <strong>Leonardo da Vinci</strong> in Florence at the very start of the 1500s, the
+      Mona Lisa is a half-length portrait of a seated woman, her body angled slightly toward us while
+      her gaze comes straight down the centuries. Behind her runs an imaginary landscape — winding
+      paths, a low bridge, blue-grey peaks — painted with an aerial perspective so deep it looks like
+      a country you could walk into.
+    </p>
+    <p>
+      The sitter is generally identified as <strong>Lisa Gherardini</strong> (1479–1542), the wife of
+      Florentine silk merchant Francesco del Giocondo — which is where the Italian
+      <em>Gioconda</em> and the French <em>Joconde</em> come from. <em>Mona</em> is a contraction of
+      <em>ma donna</em>, "my lady". Leonardo worked on the panel for years, carried it with him to
+      France, and never delivered it. He died in 1519 with the painting still in his possession.
+    </p>
+    <p>
+      What keeps people looking is the technique: <em>sfumato</em>, Leonardo's haze of almost
+      invisible transitions, leaves no hard lines anywhere — least of all at the corners of the
+      mouth, which is why the smile seems to change depending on where your eye rests.
+    </p>
+    <blockquote>
+      She is older than the rocks among which she sits; like the vampire, she has been dead many times,
+      and learned the secrets of the grave.
+      <cite>Walter Pater, 1873</cite>
+    </blockquote>
+  </section>
+
+  <section aria-labelledby="facts">
+    <h2 id="facts">Fact file</h2>
+    <dl class="facts">
+      <div><dt>Artist</dt><dd>Leonardo da Vinci (1452–1519)</dd></div>
+      <div><dt>Date</dt><dd>c. 1503–1519 (worked on for years)</dd></div>
+      <div><dt>Medium</dt><dd>Oil, on a single poplar panel</dd></div>
+      <div><dt>Dimensions</dt><dd>77 × 53 cm (30 × 21 in)</dd></div>
+      <div><dt>Genre</dt><dd>Portrait, half-length</dd></div>
+      <div><dt>Movement</dt><dd>Italian High Renaissance</dd></div>
+      <div><dt>Sitter</dt><dd>Lisa Gherardini del Giocondo (1479–1542)</dd></div>
+      <div><dt>Location</dt><dd>Salle des États, Musée du Louvre, Paris</dd></div>
+      <div><dt>Entered the Louvre</dt><dd>1797 (from the royal collection)</dd></div>
+      <div><dt>Earlier owners</dt><dd>François I → Fontainebleau → Versailles → Napoleon</dd></div>
+      <div><dt>Protection</dt><dd>Bulletproof glass, climate-controlled case</dd></div>
+      <div><dt>Insurance</dt><dd>Valued at $100 million for its 1962 US tour</dd></div>
+    </dl>
+  </section>
+
+  <section aria-labelledby="timeline">
+    <h2 id="timeline">Timeline</h2>
+    <ol class="timeline">
+      <li><b>c. 1503</b> Leonardo begins the portrait in Florence.</li>
+      <li><b>1516–17</b> He travels to France at the invitation of François I — the panel goes with him.</li>
+      <li><b>1519</b> Leonardo dies at Amboise; the painting passes into the French royal collection.</li>
+      <li><b>1797</b> After the Revolution the Louvre puts it on public display.</li>
+      <li><b>1911</b> Stolen from the Louvre by Vincenzo Peruggia, an Italian handyman. The empty wall draws crowds.</li>
+      <li><b>1913</b> Recovered in Florence after the thief tries to sell it to a dealer.</li>
+      <li><b>1956</b> A visitor throws acid at the lower half; months later another throws a stone, chipping the left elbow.</li>
+      <li><b>1962–63</b> Loaned to Washington and New York under armed guard.</li>
+      <li><b>1974</b> Travels to Tokyo and Moscow, the last trips it has ever made.</li>
+      <li><b>2005</b> Given a purpose-built climate-controlled room — Salle des États — behind glass.</li>
+      <li><b>2022 &amp; 2024</b> Cake, then soup, thrown against the glass. The smile survives; the glass does its job.</li>
+    </ol>
+  </section>
+
+  <section aria-labelledby="known-for">
+    <h2 id="known-for">Known for</h2>
+    <ul class="trivia">
+      <li>The most written-about, most parodied and most visited painting in the world.</li>
+      <li>Roughly 9–10 million visitors come to see her every year.</li>
+      <li>The horizon behind her is not level — it sits higher on the left than the right.</li>
+      <li>She has no eyebrows. Unusual for the 1500s, and possibly the result of a careful fashion choice or an old cleaning.</li>
+      <li>The panel is warped enough that the Louvre keeps it in a sealed, humidity-controlled case.</li>
+      <li>The 1911 theft is what turned a famous painting into the most famous painting.</li>
+      <li>In 1962 the US tour's insurance valuation of $100 million was a Guinness world record.</li>
+      <li>The painting is unsigned and undated, like most of Leonardo's work.</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="news">
+    <h2 id="news">Where she's heading next</h2>
+    <p class="note">
+      <strong>Update, 2026:</strong> under the Louvre's <em>Nouvelle Renaissance</em> renovation — announced in
+      January 2025 — the museum is building a <strong>dedicated gallery for the Mona Lisa</strong>, so she can be
+      seen on her own rather than at the end of a crowded run through the Grande Galerie. The architects for the
+      wider revamp, Selldorf Architects and STUDIOS Architecture Paris, were named in May 2026.
+    </p>
+  </section>
+
+  <footer>
+    <p>
+      <strong>Hello world!!!!</strong> — profile page exercise for
+      <code>420-207-TV</code>, TAV College. Image: <em>Mona Lisa</em> by Leonardo da Vinci (public domain),
+      via Wikimedia Commons.
+    </p>
+  </footer>
+
+</main>
+
+</body>
+</html>
