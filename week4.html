@@ -1,0 +1,11 @@
+<p id="myText">This is a paragraph</p>
+<button onclick="clickme()">Click Me</button>
+<script>
+  function clickme() {
+    document.getElementById("myText").innerHTML = "You changed me!";
+  }
+
+  const clickMe2 = () => {
+    document.getElementById("myText").innerHTML = "You changed me again!";
+  };
+</script>
