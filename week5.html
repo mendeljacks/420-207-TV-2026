@@ -1,1 +1,32 @@
-<h1>Hi</h1>
+<h1>My Table</h1>
+<table id="table"></table>
+<button onclick="load()">Load</button>
+
+<script>
+  const load = async () => {
+    const my_collection = await (
+      await fetch("https://jsonplaceholder.typicode.com/users")
+    ).json();
+
+    document.getElementById("table").innerHTML = `
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${my_collection
+                  .map(
+                    (item) => `
+                    <tr>
+                      <td>${item.name}</td>
+                      <td>${item.email}</td>
+                    </tr>
+                  `,
+                  )
+                  .join("")}
+              </tbody>
+            `;
+  };
+</script>
