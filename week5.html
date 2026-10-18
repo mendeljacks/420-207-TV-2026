@@ -1,32 +1,437 @@
-<h1>My Table</h1>
-<table id="table"></table>
-<button onclick="load()">Load</button>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>My Table</title>
+    <style>
+      :root {
+        --bg: #eef2f9;
+        --bg-accent: #dbe4f6;
+        --card: #ffffff;
+        --text: #1b2333;
+        --muted: #69748c;
+        --line: #e6ebf4;
+        --brand: #4f46e5;
+        --brand-2: #7c3aed;
+        --shadow: 0 24px 60px -24px rgba(24, 33, 58, 0.35);
+        --pad: clamp(24px, 6vw, 72px);
+      }
 
-<script>
-  const load = async () => {
-    const my_collection = await (
-      await fetch("https://jsonplaceholder.typicode.com/users")
-    ).json();
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0d1220;
+          --bg-accent: #131a2c;
+          --card: #151c2e;
+          --text: #e8edf8;
+          --muted: #94a1bd;
+          --line: #232c42;
+          --brand: #6366f1;
+          --brand-2: #a855f7;
+          --shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.75);
+        }
+      }
 
-    document.getElementById("table").innerHTML = `
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Email</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${my_collection
-                  .map(
-                    (item) => `
-                    <tr>
-                      <td>${item.name}</td>
-                      <td>${item.email}</td>
-                    </tr>
-                  `,
-                  )
-                  .join("")}
-              </tbody>
-            `;
-  };
-</script>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: var(--pad) 20px;
+        font-family:
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 15% 0%, var(--bg-accent), transparent 55%),
+          radial-gradient(
+            circle at 85% 100%,
+            var(--bg-accent),
+            transparent 50%
+          ),
+          var(--bg);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .card {
+        display: flex;
+        flex-direction: column;
+        max-height: calc(100vh - var(--pad) * 2);
+        width: min(860px, 100%);
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .card__head {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        align-items: center;
+        justify-content: space-between;
+        padding: 26px 28px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 1.5rem;
+        letter-spacing: -0.02em;
+      }
+
+      h1 span {
+        background: linear-gradient(90deg, var(--brand), var(--brand-2));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      .subtitle {
+        margin: 6px 0 0;
+        font-size: 0.875rem;
+        color: var(--muted);
+      }
+
+      .count {
+        display: inline-block;
+        margin-left: 8px;
+        padding: 2px 9px;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--brand);
+        background: color-mix(in srgb, var(--brand) 12%, transparent);
+      }
+
+      button {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        padding: 11px 20px;
+        border: 0;
+        border-radius: 11px;
+        font: inherit;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #fff;
+        cursor: pointer;
+        background: linear-gradient(135deg, var(--brand), var(--brand-2));
+        box-shadow: 0 10px 22px -12px var(--brand);
+        transition:
+          transform 0.15s ease,
+          box-shadow 0.15s ease,
+          opacity 0.15s ease;
+      }
+
+      button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 16px 28px -12px var(--brand);
+      }
+      button:active {
+        transform: translateY(1px);
+      }
+      button:disabled {
+        opacity: 0.6;
+        cursor: progress;
+        transform: none;
+      }
+      button:focus-visible {
+        outline: 3px solid color-mix(in srgb, var(--brand) 45%, transparent);
+        outline-offset: 2px;
+      }
+
+      .spinner {
+        width: 14px;
+        height: 14px;
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        display: none;
+      }
+
+      button.is-loading .spinner {
+        display: block;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .scroll {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: auto;
+        overscroll-behavior: contain;
+        scrollbar-width: thin;
+        scrollbar-color: color-mix(in srgb, var(--muted) 45%, transparent)
+          transparent;
+      }
+
+      .scroll::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+      }
+      .scroll::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .scroll::-webkit-scrollbar-thumb {
+        border: 3px solid transparent;
+        border-radius: 999px;
+        background-clip: content-box;
+        background-color: color-mix(in srgb, var(--muted) 45%, transparent);
+      }
+      .scroll::-webkit-scrollbar-thumb:hover {
+        background-color: color-mix(in srgb, var(--muted) 70%, transparent);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.925rem;
+      }
+
+      thead th {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        padding: 13px 28px;
+        text-align: left;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        color: var(--muted);
+        background: var(--card);
+        border-bottom: 1px solid var(--line);
+      }
+
+      tbody td {
+        padding: 13px 28px;
+        border-bottom: 1px solid var(--line);
+        vertical-align: middle;
+      }
+
+      tbody tr:last-child td {
+        border-bottom: 0;
+      }
+      tbody tr {
+        transition: background 0.15s ease;
+      }
+      tbody tr:hover {
+        background: color-mix(in srgb, var(--brand) 6%, transparent);
+      }
+
+      .who {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .avatar {
+        flex: 0 0 auto;
+        width: 34px;
+        height: 34px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        color: #fff;
+        background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      }
+
+      .name {
+        font-weight: 600;
+      }
+
+      .email {
+        color: var(--muted);
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+        transition:
+          color 0.15s ease,
+          border-color 0.15s ease;
+      }
+
+      .email:hover {
+        color: var(--brand);
+        border-bottom-color: currentColor;
+      }
+
+      .state {
+        padding: 46px 28px 52px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .state strong {
+        display: block;
+        margin-bottom: 4px;
+        color: var(--text);
+        font-size: 1rem;
+      }
+      .state.is-error strong {
+        color: #dc2626;
+      }
+
+      @media (max-width: 620px) {
+        .card__head {
+          padding: 20px;
+        }
+        button {
+          width: 100%;
+          justify-content: center;
+        }
+        thead {
+          display: none;
+        }
+        tbody td {
+          display: block;
+          padding: 6px 20px;
+          border: 0;
+        }
+        tbody tr {
+          display: block;
+          padding: 14px 0;
+          border-bottom: 1px solid var(--line);
+        }
+        tbody td:first-child {
+          padding-top: 0;
+        }
+        tbody td:last-child {
+          padding-bottom: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <header class="card__head">
+        <div>
+          <h1>My <span>Table</span></h1>
+          <p class="subtitle">
+            Users loaded from the JSONPlaceholder API<span
+              class="count"
+              id="count"
+              hidden
+              >0</span
+            >
+          </p>
+        </div>
+        <button id="loadBtn" onclick="load()">
+          <span class="spinner" aria-hidden="true"></span>
+          <span id="loadLabel">Load</span>
+        </button>
+      </header>
+
+      <div class="scroll">
+        <table id="table">
+          <tbody>
+            <tr>
+              <td class="state">
+                <strong>No data yet</strong>
+                Click Load to fetch the list of users.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+
+    <script>
+      const initials = (name) =>
+        name
+          .split(/\s+/)
+          .slice(0, 2)
+          .map((word) => word[0])
+          .join("")
+          .toUpperCase();
+
+      const setStatus = (title, message, isError = false) => {
+        const cell = document.createElement("td");
+        cell.className = "state" + (isError ? " is-error" : "");
+        const strong = document.createElement("strong");
+        strong.textContent = title;
+        cell.append(strong, message);
+        const row = document.createElement("tr");
+        row.append(cell);
+        document.getElementById("table").replaceChildren(row);
+        document.getElementById("count").hidden = true;
+      };
+
+      const load = async () => {
+        const button = document.getElementById("loadBtn");
+        const label = document.getElementById("loadLabel");
+
+        button.disabled = true;
+        button.classList.add("is-loading");
+        label.textContent = "Loading…";
+        setStatus("Loading…", "Fetching users from the API.");
+
+        try {
+          const my_collection = await (
+            await fetch("https://jsonplaceholder.typicode.com/users")
+          ).json();
+
+          document.getElementById("table").innerHTML = `
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${my_collection
+                .map(
+                  (item) => `
+                  <tr>
+                    <td>
+                      <div class="who">
+                        <span class="avatar">${initials(item.name)}</span>
+                        <span class="name">${item.name}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <a class="email" href="mailto:${item.email}">${item.email}</a>
+                    </td>
+                  </tr>
+                `,
+                )
+                .join("")}
+            </tbody>
+          `;
+
+          const count = document.getElementById("count");
+          count.textContent = my_collection.length;
+          count.hidden = false;
+          label.textContent = "Reload";
+        } catch (error) {
+          setStatus(
+            "Something went wrong",
+            "The users could not be loaded. Try again.",
+            true,
+          );
+          label.textContent = "Retry";
+        } finally {
+          button.disabled = false;
+          button.classList.remove("is-loading");
+        }
+      };
+    </script>
+  </body>
+</html>
