@@ -1,0 +1,283 @@
+:root {
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    color: #fff;
+    -webkit-font-smoothing: antialiased;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+}
+
+/* ---------- Page background (changes with the weather) ---------- */
+
+.app {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    background: linear-gradient(160deg, var(--sky-top), var(--sky-bottom));
+}
+
+.theme-default { --sky-top: #4f7cff; --sky-bottom: #8e5cf7; }
+.theme-clear   { --sky-top: #2f8fff; --sky-bottom: #f7a84f; }
+.theme-cloudy  { --sky-top: #5d6d84; --sky-bottom: #95a5ba; }
+.theme-rain    { --sky-top: #2c3e50; --sky-bottom: #4a6a8f; }
+.theme-snow    { --sky-top: #6a8fba; --sky-bottom: #a9bfdb; }
+.theme-storm   { --sky-top: #1e2140; --sky-bottom: #4b3f72; }
+.theme-night   { --sky-top: #0d1430; --sky-bottom: #2b3270; }
+
+/* ---------- Glass card ---------- */
+
+.card {
+    width: 100%;
+    max-width: 440px;
+    min-width: 0;
+    padding: 1.75rem;
+    border-radius: 28px;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.25);
+}
+
+.title {
+    margin: 0 0 1rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.8;
+}
+
+/* ---------- Search ---------- */
+
+.search {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.search input {
+    flex: 1;
+    min-width: 0;
+    padding: 0.8rem 1.1rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.18);
+    color: inherit;
+    font: inherit;
+    outline: none;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.search input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.search input:focus {
+    background: rgba(255, 255, 255, 0.28);
+    border-color: rgba(255, 255, 255, 0.8);
+}
+
+.search button {
+    padding: 0.8rem 1.3rem;
+    border: none;
+    border-radius: 999px;
+    background: #fff;
+    color: #1e293b;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.search button:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.search button:focus-visible {
+    outline: 3px solid rgba(255, 255, 255, 0.6);
+    outline-offset: 2px;
+}
+
+.search button:disabled {
+    opacity: 0.7;
+    cursor: wait;
+}
+
+/* ---------- Messages ---------- */
+
+.hint,
+.error {
+    margin: 1.5rem 0 0;
+    text-align: center;
+    line-height: 1.5;
+}
+
+.hint {
+    opacity: 0.85;
+}
+
+.error {
+    padding: 0.75rem 1rem;
+    border-radius: 14px;
+    background: rgba(220, 38, 38, 0.3);
+    border: 1px solid rgba(254, 202, 202, 0.5);
+}
+
+/* ---------- Current weather ---------- */
+
+.weather {
+    animation: rise 0.4s ease-out;
+}
+
+.current {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.place {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.condition {
+    margin: 0.25rem 0 0;
+    opacity: 0.85;
+}
+
+.temp-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.icon {
+    font-size: 4rem;
+    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.2));
+}
+
+.temp {
+    font-size: 5.5rem;
+    font-weight: 200;
+    line-height: 1;
+    letter-spacing: -0.04em;
+}
+
+/* ---------- Stats ---------- */
+
+.stats {
+    list-style: none;
+    margin: 1.75rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+}
+
+.stats li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.8rem 0.5rem;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.12);
+    text-align: center;
+}
+
+.stat-label,
+.section-title {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.75;
+}
+
+.stat-value {
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+/* ---------- Hourly forecast ---------- */
+
+.section-title {
+    margin: 1.75rem 0 0.6rem;
+}
+
+.hourly {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0.6rem;
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
+}
+
+.hourly li {
+    flex: 0 0 64px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.8rem 0;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.1);
+    font-size: 0.85rem;
+    scroll-snap-align: start;
+}
+
+.hourly li.now {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.hour-time {
+    opacity: 0.85;
+}
+
+.hour-icon {
+    font-size: 1.4rem;
+}
+
+.hour-temp {
+    font-weight: 600;
+}
+
+/* ---------- Animation ---------- */
+
+@keyframes rise {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+@media (max-width: 400px) {
+    .card {
+        padding: 1.25rem;
+    }
+
+    .temp {
+        font-size: 4.5rem;
+    }
+}
